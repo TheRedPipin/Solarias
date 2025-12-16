@@ -5,7 +5,7 @@
  */
 
 import { gameState, hasItem, addItem, removeItem, moveToTile, getCurrentPosition, triggerPlayerInfoUpdate } from './gameState.js';
-import { getTile, isDirectionAllowed, getNextTile, getCorridorDescription } from './map.js';
+import { getTile, getNextTile, getExits } from './map.js';
 import { npcs } from './npcs.js';
 import { loadViewImage } from '../core/ui.js';
 
@@ -21,7 +21,7 @@ export function parseCommand(input, type) {
     }
     
     if (cmd.startsWith('go ') || cmd.startsWith('move ') || ['north', 'south', 'east', 'west', 'n', 's', 'e', 'w'].includes(cmd)) {
-        return handleMovement(cmd, currentTile);
+        return handleMovement(cmd);
     }
     
     if (cmd.startsWith('look') || cmd.startsWith('examine') || cmd === 'l') {
@@ -56,74 +56,61 @@ export function parseCommand(input, type) {
 }
 
 function getHelpText() {
-    return `Available Commands:
+    return `
+    Available Commands:
+
+    MOVEMENT:
+    GO [direction] / [N/S/E/W] - Move in a direction
     
-MOVEMENT:
-  GO [direction] / [N/S/E/W] - Move in a direction
-  
-INTERACTION:
-  LOOK / EXAMINE - Look around
-  TAKE [item] - Pick up an item
-  USE [item] - Use an item
-  TALK TO [person] - Speak with someone
-  GIVE [item] TO [person] - Give an item
-  BUY [item] - Purchase from merchant
-  
-OTHER:
-  INVENTORY / I - Check items
-  HELP - Show this help text`;
+    INTERACTION:
+    LOOK / EXAMINE - Look around
+    TAKE [item] - Pick up an item
+    USE [item] - Use an item
+    TALK TO [person] - Speak with someone
+    GIVE [item] TO [person] - Give an item
+    BUY [item] - Purchase from merchant
+    
+    OTHER:
+    INVENTORY / I - Check items
+    HELP - Show this help text
+  `;
 }
 
-function handleMovement(cmd, currentTile) {
+function handleMovement(cmd) {
     let direction = cmd.replace(/^(go|move)\s+/, '');
-    
     const dirMap = { n: 'north', s: 'south', e: 'east', w: 'west' };
     direction = dirMap[direction] || direction;
+    const nextCoords = getNextTile(gameState.x, gameState.y, direction);
     // Check if direction is allowed from this tile
-    if (!isDirectionAllowed(gameState.x, gameState.y, direction)) {
+    if (!nextCoords) {
         return "You can't go that way. The passage is blocked by stone.";
     }
-    
-    // Get next tile
-    const nextCoords = getNextTile(gameState.x, gameState.y, direction);
-    if (!nextCoords) {
-        return "You can't go that way. Only darkness lies beyond.";
-    }
-    
     const nextTile = getTile(nextCoords.x, nextCoords.y);
-    
     // Check if next tile is a locked door without skeleton key
     if (nextTile && nextTile.type === 'locked_door' && !hasItem('skeleton_key')) {
         // Don't move the player, just show the blocked message
         return "A heavy door blocks your path, bound with chains. You need a key to proceed.";
     }
-    
-    // Move player
-    moveToTile(nextCoords.x, nextCoords.y);
-    let newTile = getTile(nextCoords.x, nextCoords.y);
-    
     // Handle circle teleportation
-    if (newTile && newTile.type === 'circle1') {
+    else if (nextTile && nextTile.type === 'circle1') {
         moveToTile(0, 3); // Teleport to circle2
-        newTile = getTile(0, 3);
+        nextTile = getTile(0, 3);
         loadViewImage('./assets/images/corridor.png', 'Corridor', false, true);
-        const description = getTileDescription(newTile);
+        const description = nextTile.description;
         const exitsText = getExitsText();
         return `You move ${direction}.\n\nYour body becomes light before quickly returning to normal...\n\n${description}\n\n${exitsText}`;
     }
-    
-    if (newTile && newTile.type === 'circle2') {
+    else if (nextTile && nextTile.type === 'circle2') {
         moveToTile(0, 5); // Teleport to circle1
-        newTile = getTile(0, 5);
+        nextTile = getTile(0, 5);
         loadViewImage('./assets/images/corridor.png', 'Corridor', false, true);
-        const description = getTileDescription(newTile);
+        const description = nextTile.description;
         const exitsText = getExitsText();
         return `You move ${direction}.\n\nYour body becomes light before quickly returning to normal...\n\n${description}\n\n${exitsText}`;
     }
-    
     // Load appropriate image based on tile type
-    if (newTile) {
-        switch (newTile.type) {
+    if (nextTile) {
+        switch (nextTile.type) {
             case 'whimpering':
                 loadViewImage('./assets/images/whimpering.png', 'Whimpering Chamber', true, true);
                 break;
@@ -147,22 +134,22 @@ function handleMovement(cmd, currentTile) {
     }
     
     // Get description for new tile
-    const description = getTileDescription(newTile);
+    const description = nextTile.description;
+    moveToTile(nextCoords.x, nextCoords.y);
     const exitsText = getExitsText();
-    
     return `You move ${direction}.\n\n${description}\n\n${exitsText}`;
 }
 
 function handleLook(currentTile) {
-    const description = getTileDescription(currentTile);
+    const description = currentTile.description;
     const exitsText = getExitsText();
     
     return `${description}\n\n${exitsText}`;
 }
 
 function getExitsText() {
-    const tile = getTile(gameState.x, gameState.y);
-    if (!tile || !tile.allowedExits) return "You can go: nowhere";
+    const directionExits = getExits(gameState.x, gameState.y);
+    if (!directionExits) return "You can go: nowhere";
     
     const arrows = {
         north: '↑',
@@ -170,40 +157,12 @@ function getExitsText() {
         east: '→',
         west: '←'
     };
-    
-    const exitList = tile.allowedExits.map(dir => `${arrows[dir] || '•'} ${dir}`).join(', ');
-    return `You can go: ${exitList}`;
-}
 
-function getTileDescription(tile) {
-    if (!tile) return "You're in a void. Nothing exists here.";
-    
-    switch (tile.type) {
-        case 'start':
-            return "Starting Cell\nA dim cell. Cold stone walls press in from all sides. There's barely enough light to see.";
-        case 'corridor':
-            return "Corridor\n" + getCorridorDescription();
-        case 'whimpering':
-            return "Whimpering Chamber\nA narrow passage stretches before you. Water drips somewhere in the darkness.\n\nA hunched figure rocks back and forth in the corner, sobbing quietly.";
-        case 'merchant':
-            return "Merchant's Chamber\nA vast room. Candles flicker on a table. Behind it sits a figure in tattered robes, smiling with too many teeth.";
-        case 'prisoner':
-            return "Prison Cell\nA cramped cell. Someone sits against the far wall, knees drawn up, staring at nothing.";
-        case 'puzzle':
-            return "Sacrificial Chamber\nA stone pedestal dominates the room. Upon it rests a weathered blade molded to the surface.";
-        case 'circle1':
-            return "Endless Corridor\nThe passage curves unnaturally. Your footsteps echo wrong. The walls seem to breathe.";
-        case 'circle2':
-            return "Endless Corridor\nThe passage twists back on itself. You feel dizzy. Something isn't right here.";
-        case 'end':
-            return "The light burns your skin... here it is... the sun!";
-        case 'locked_door':
-            return "Sealed Passage\nA heavy door blocks your path, bound with chains. Whatever lies beyond is locked away.";
-        case 'para':
-            return "Dead End\nThe passage stops abruptly. Stone blocks your path.\n\nYou feel off.";
-        default:
-            return "You're somewhere. It's dark.";
+    for (let i = 0; i < directionExits.length; i++) {
+        directionExits[i] = `${directionExits[i].charAt(0).toUpperCase() + directionExits[i].slice(1)} ${arrows[directionExits[i]]}`;
     }
+    
+    return `You can go: ${directionExits}`;
 }
 
 function showInventory() {

@@ -1,9 +1,3 @@
-/**
- * NPCS MODULE
- * Defines NPC dialogue, behaviors, and trade mechanics.
- * Handles interactions with the whimpering man, merchant, and prisoner.
- */
-
 import { gameState, hasItem, addItem, removeItem, triggerPlayerInfoUpdate } from './gameState.js';
 
 export const npcs = {

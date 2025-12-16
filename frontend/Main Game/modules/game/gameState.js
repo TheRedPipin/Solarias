@@ -1,9 +1,3 @@
-/**
- * GAME STATE MODULE
- * Manages player inventory, location, and game progression.
- * Uses coordinate-based tile system (0-9 x and y).
- */
-
 // Global game state
 export const gameState = {
     x: 6,           // Player X coordinate (0-9)

@@ -1,49 +1,29 @@
-/**
- * MAP MODULE
- * Defines the 10x10 dungeon grid with tile-based system.
- * Each tile can have specific allowed directions and unique properties.
- */
+const locationInformation = {
+    0:null,
+    1:{type: 'corridor', description: `More nothing...`},
+    2:{type: 'start', description:`Starting Cell\nA dim cell. Cold stone walls press in from all sides. There's barely enough light to see. A faint dripping can be heared somewhere beyond here.`},
+    3:{type: 'whimpering', description:`Whimpering Chamber\nA narrow passage stretches before you. Water drips somewhere in the darkness.\n\nA hunched figure rocks back and forth in the corner, sobbing quietly.`},
+    4:{type: 'merchant', description: `Merchant's Chamber\nA vast room. Candles flicker on a table. Behind it sits a figure in tattered robes.`},
+    5:{type: 'prisoner', description: `Prison Cell\nA cramped cell. Someone sits against the far wall, knees drawn up, staring at nothing.`},
+    6:{type: 'puzzle', description: `Sacrificial Chamber\nA stone pedestal dominates the room. Upon it rests a weathered blade molded to the surface.`},
+    7:{type: 'circle1', description: `Endless Corridor\nThe passage curves unnaturally. Your footsteps echo wrong. The walls seem to breathe.`},
+    8:{type: 'circle2', description: `Endless Corridor\nThe passage twists back on itself. You feel dizzy. Something isn't right here.`},
+    9:{type: 'locked_door', description: `Sealed Passage\nA heavy door blocks your path, bound with chains. Whatever lies beyond is locked away.`},
+    10:{type: 'para', description: `Dead End\nThe passage stops abruptly. Stone blocks your path.\n\nYou feel off.`},
+    11:{type: 'end', description: `The light burns your skin... here it is... the sun!`}
+}
 
-// Basic corridor descriptions (randomly selected for generic corridors)
-const corridorDescriptions = [
-    "A narrow stone corridor stretches before you. Your footsteps echo off damp walls.",
-    "The passage is cramped and cold. Shadows dance in the flickering darkness.",
-    "A simple corridor. Water drips from above, leaving dark stains on the stone.",
-    "The walls press in close. The air tastes of dust and decay.",
-    "An unremarkable passage. You've seen a hundred corridors like this.",
-    "Stone walls on all sides. The darkness feels almost alive here.",
-    "Carved from raw stone, this passage leads deeper into shadow.",
-    "The corridor widens slightly here. Strange markings cover the walls.",
-    "You walk in silence. Your heartbeat echoes louder than your footsteps.",
-    "The air grows colder as you advance through the passage."
-];
-
-/**
- * The dungeon map - 10x10 grid
- * Format: map[y][x] where (0,0) is top-left
- * Each tile can have: type, allowedExits, npc, items, etc.
- */
 const dungeonMap = [
-    // Y=0
-    [null, null, null, null, null, null, null, null, null, null],
-    // Y=1
-    [{type: 'corridor', allowedExits: ['east', 'south']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'corridor', allowedExits: ['east', 'south', 'west']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'corridor', allowedExits: ['east', 'south', 'west']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'merchant', npc: 'merchant', allowedExits: ['west']}, null],
-    // Y=2
-    [{type: 'corridor', allowedExits: ['north', 'south']}, null, {type: 'corridor', allowedExits: ['north', 'south']}, null, {type: 'locked_door', allowedExits: ['north', 'south']}, null, null, null, null, null],
-    // Y=3
-    [{type: 'circle2', allowedExits: ['north', 'east']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'corridor', allowedExits: ['north', 'west']}, {type: 'para', allowedExits: ['east']}, {type: 'corridor', allowedExits: ['north', 'east', 'south' ,'west']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'corridor', allowedExits: ['east', 'south', 'west']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'corridor', allowedExits: ['south', 'west']}, null],
-    // Y=4
-    [null, null, null, null, {type: 'corridor', allowedExits: ['north', 'south']}, null, {type: 'corridor', allowedExits: ['north', 'south']}, null, {type: 'corridor', allowedExits: ['north', 'south']}, null],
-    // Y=5
-    [{type: 'circle1', allowedExits: ['east', 'south']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'corridor', allowedExits: ['south', 'west']}, null, {type: 'corridor', allowedExits: ['north', 'south']}, null, {type: 'whimpering', npc: 'whimpering_man', allowedExits: ['north', 'south']}, {type: 'puzzle', allowedExits: ['east']}, {type: 'corridor', allowedExits: ['north', 'south', 'west']}, null],
-    // Y=6
-    [{type: 'corridor', allowedExits: ['north', 'south']}, null, {type: 'corridor', allowedExits: ['north', 'south']}, null, {type: 'corridor', allowedExits: ['north', 'south']}, null, {type: 'start', allowedExits: ['north']}, null, {type: 'locked_door', allowedExits: ['west', 'north']}, null],
-    // Y=7
-    [{type: 'corridor', allowedExits: ['north', 'east']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'corridor', allowedExits: ['north', 'east', 'west']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'corridor', allowedExits: ['north', 'south', 'west']}, null, null, null, {type: 'prisoner', allowedExits: ['north']}, null],
-    // Y=8
-    [null, null, null, null, {type: 'locked_door', allowedExits: ['north', 'south']}, null, null, null, null, null],
-    // Y=9
-    [null, null, null, null, {type: 'corridor', allowedExits: ['north', 'east']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'corridor', allowedExits: ['east', 'west']}, {type: 'end', allowedExits: [null]}, null, null]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 1, 1, 4, 0],
+    [1, 0, 1, 0, 9, 0, 0, 0, 0, 0],
+    [8, 1, 1, 10, 1, 1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 1, 0, 1, 0, 1, 0],
+    [7, 1, 1, 0, 1, 0, 3, 0, 1, 6],
+    [1, 0, 1, 0, 1, 0, 2, 0, 9, 0],
+    [1, 1, 1, 1, 1, 0, 0, 0, 5, 0],
+    [0, 0, 0, 0, 9, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 1, 11, 0, 0]
 ];
 
 
@@ -54,34 +34,13 @@ const dungeonMap = [
  * @returns {Object|null} Tile data or null if out of bounds
  */
 export function getTile(x, y) {
-    console.log(`Getting tile at (${x}, ${y})`);
-    console.log(dungeonMap[y][x]);
     if (x < 0 || x > 9 || y < 0 || y > 9) return null;
-    return dungeonMap[y][x];
+    return locationInformation[dungeonMap[y][x]];
 }
 
-/**
- * Check if a tile exists and is passable
- * @param {number} x - X coordinate
- * @param {number} y - Y coordinate
- * @returns {boolean} Whether tile exists
- */
 export function canMoveTo(x, y) {
     const tile = getTile(x, y);
     return tile !== null && tile !== undefined;
-}
-
-/**
- * Check if a direction is allowed from a tile
- * @param {number} x - Current X
- * @param {number} y - Current Y
- * @param {string} direction - Direction to check
- * @returns {boolean} Whether movement is allowed
- */
-export function isDirectionAllowed(x, y, direction) {
-    const tile = getTile(x, y);
-    if (!tile || !tile.allowedExits) return false;
-    return tile.allowedExits.includes(direction);
 }
 
 /**
@@ -108,25 +67,6 @@ export function getNextTile(x, y, direction) {
         return { x: nextX, y: nextY };
     }
     return null;
-}
-
-/**
- * Get description for a corridor tile
- * @returns {string} Random corridor description from pool of 10
- */
-export function getCorridorDescription() {
-    const randomIndex = Math.floor(Math.random() * corridorDescriptions.length);
-    return corridorDescriptions[randomIndex];
-}
-
-/**
- * Parse tile coordinate from string format "x,y"
- * @param {string} coordString - Coordinate string
- * @returns {Object} {x, y} coordinate pair
- */
-function parseCoord(coordString) {
-    const [x, y] = coordString.split(',').map(Number);
-    return { x, y };
 }
 
 /**
@@ -196,12 +136,7 @@ export function generateMapDisplay(visitedTiles, playerPos) {
     return lines.join('\n');
 }
 
-/**
- * Update the map display in the UI.
- * This function will be called with game state from gameState.js
- * @param {Array} visitedTiles - Array of visited coordinates
- * @param {Object} playerPos - Current player position {x, y}
- */
+
 export function updateMapDisplay(visitedTiles = [], playerPos = {x: 6, y: 6}) {
     const mapContent = document.querySelector('#mapPanel .map-content');
     if (!mapContent) return;
@@ -209,9 +144,20 @@ export function updateMapDisplay(visitedTiles = [], playerPos = {x: 6, y: 6}) {
     const mapText = generateMapDisplay(visitedTiles, playerPos);
     mapContent.innerHTML = `<pre class="ascii-map updating">${mapText}</pre>`;
     
-    // Remove animation class after animation completes
     const mapElement = mapContent.querySelector('.ascii-map');
     if (mapElement) {
         setTimeout(() => mapElement.classList.remove('updating'), 400);
     }
+}
+
+export function getExits(x, y) {
+    let possibleExits = [];
+    for (const dir of ['north', 'south', 'east', 'west']) {
+        const nextCoords = getNextTile(x, y, dir);
+        console.log('Next Coords for', dir, ':', nextCoords);
+        if (nextCoords) {
+            possibleExits.push(dir);
+        }
+    }
+    return possibleExits;
 }
