@@ -1,23 +1,12 @@
 import { gameState, hasItem, addItem, removeItem, triggerPlayerInfoUpdate } from './gameState.js';
 
 export const npcs = {
-    whimpering_man: {
+    whimpering: {
         name: "Whimpering Man",
         description: "A hunched figure rocks back and forth, sobbing quietly. He won't look at you.",
         dialogue: {
             default: "...*sob*... *sob*...",
-            no_jar: "The man reaches out desperately, but you have nothing to give.",
-            give_jar: "The man snatches the jar from your hands. Tears stream down his face, filling it slowly. He hands it back without a word. His sobbing continues."
-        },
-        canTrade: () => hasItem('jar'),
-        trade: () => {
-            if (hasItem('jar')) {
-                removeItem('jar');
-                addItem('jar_of_tears');
-                gameState.flags.whimpering_man_helped = true;
-                return npcs.whimpering_man.dialogue.give_jar;
-            }
-            return npcs.whimpering_man.dialogue.no_jar;
+            give_jar: "The man snatches the jar from your hands. Tears stream down his face, filling it slowly. He hand's it back."
         }
     },
     

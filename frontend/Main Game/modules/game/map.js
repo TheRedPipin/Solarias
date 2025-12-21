@@ -2,7 +2,7 @@ const locationInformation = {
     0:null,
     1:{type: 'corridor', description: `More nothing...`},
     2:{type: 'start', description:`Starting Cell\nA dim cell. Cold stone walls press in from all sides. There's barely enough light to see. A faint dripping can be heared somewhere beyond here.`},
-    3:{type: 'whimpering', description:`Whimpering Chamber\nA narrow passage stretches before you. Water drips somewhere in the darkness.\n\nA hunched figure rocks back and forth in the corner, sobbing quietly.`},
+    3:{type: 'whimpering', description:`Whimpering Chamber\nA narrow passage stretches before you. Water drips somewhere in the darkness.\n\nA hunched figure rocks back and forth in the corner, sobbing quietly.`, npc: "whimpering"},
     4:{type: 'merchant', description: `Merchant's Chamber\nA vast room. Candles flicker on a table. Behind it sits a figure in tattered robes.`},
     5:{type: 'prisoner', description: `Prison Cell\nA cramped cell. Someone sits against the far wall, knees drawn up, staring at nothing.`},
     6:{type: 'puzzle', description: `Sacrificial Chamber\nA stone pedestal dominates the room. Upon it rests a weathered blade molded to the surface.`},
@@ -27,12 +27,6 @@ const dungeonMap = [
 ];
 
 
-/**
- * Get tile at coordinates (0-indexed)
- * @param {number} x - X coordinate (0-9)
- * @param {number} y - Y coordinate (0-9)
- * @returns {Object|null} Tile data or null if out of bounds
- */
 export function getTile(x, y) {
     if (x < 0 || x > 9 || y < 0 || y > 9) return null;
     return locationInformation[dungeonMap[y][x]];
@@ -43,13 +37,6 @@ export function canMoveTo(x, y) {
     return tile !== null && tile !== undefined;
 }
 
-/**
- * Get the next coordinates for a direction
- * @param {number} x - Current X
- * @param {number} y - Current Y
- * @param {string} direction - Direction to move
- * @returns {Object|null} {x, y} of next tile or null
- */
 export function getNextTile(x, y, direction) {
     const dirMap = {
         north: { x: 0, y: -1 },
@@ -69,15 +56,9 @@ export function getNextTile(x, y, direction) {
     return null;
 }
 
-/**
- * Generate ASCII map display showing visited tiles
- * @param {Array} visitedTiles - Array of visited tile coordinates as "x,y" strings
- * @param {Object} playerPos - Player position {x, y}
- * @returns {string} ASCII map visualization
- */
 export function generateMapDisplay(visitedTiles, playerPos) {
     const lines = [];
-    const width = 21; // Total width including borders
+    const width = 21;
     
     lines.push('╔═══════════════════╗');
     lines.push('║    @!"£^!%"£"!    ║');
@@ -90,11 +71,8 @@ export function generateMapDisplay(visitedTiles, playerPos) {
         lines.push('╚═══════════════════╝');
         return lines.join('\n');
     }
-    
-    // Create a Set for quick lookup of visited coordinates
     const visitedSet = new Set(visitedTiles);
     
-    // Build 10x10 grid
     for (let y = 0; y < 10; y++) {
         const cells = [];
         for (let x = 0; x < 10; x++) {
@@ -126,7 +104,6 @@ export function generateMapDisplay(visitedTiles, playerPos) {
                 cells.push(' ');
             }
         }
-        // Create row with exactly 19 characters of content (10 symbols + 9 spaces between)
         const content = cells.join(' ');
         lines.push('║' + content + '║');
     }
