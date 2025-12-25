@@ -88,8 +88,6 @@ export function setViewImageUpdater(fn) {
     updateViewImage = fn;
 }
 
-// ...existing code...
-
 export function loadTileImage(tile, forceTransition = false) {
     if (!tile || !tile.image) {
         console.warn('No image data for tile:', tile);

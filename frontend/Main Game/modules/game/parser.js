@@ -1,7 +1,6 @@
 import { getTile, getNextTile, getExits } from './map.js';
 import { gameState, hasItem, addItem, removeItem, moveToTile, triggerPlayerInfoUpdate, loadTileImage } from './gameState.js';
 import { npcs } from './npcs.js';
-import { loadViewImage } from '../core/ui.js';
 
 export function parseCommand(input) {
     const cmd = input.toLowerCase().trim();
@@ -192,13 +191,8 @@ function handleBuy(cmd, currentTile) {
     
     const item = cmd.replace(/^buy\s+/, '').toLowerCase();
     
-    if (item.includes('glow') && item.includes('bug')) {
-        return npc.buyGlowBug();
-    }
-    if (item.includes('skeleton') && item.includes('key')) {
-        return npc.buySkeletonKey();
-    }
-    
+    //Finish logic
+
     return npc.getGreeting();
 }
 
@@ -210,7 +204,8 @@ function handleUse(cmd, currentTile) {
         if (lowerInput.includes('pedestal') || lowerInput.includes('blade') || lowerInput.includes('touch') || lowerInput.includes('press')) {
             if (!gameState.flags.puzzle_solved) {
                 gameState.flags.puzzle_solved = true;
-                loadViewImage('./assets/images/sacrificeAfter.png', 'Sacrificial Chamber', true, true);
+                const tile = getTile(gameState.x, gameState.y);
+                loadTileImage(tile, true);
             }
             return "Your hand touches the weathered blade atop the pedestal.\n\nThe moment your skin makes contact, the blade shifts, stabbing into you. Blood wells from your fingers.\n\nYour blood drips onto the stone. A low grinding sound echoes through the chamber as a hidden drawer slides open from the pedestal's base, revealing a bone saw within.";
         }

@@ -24,7 +24,7 @@ Maybe you'll find the sun or maybe it'll find you.
 
 ## To Do!
 
-1. NPC Handling needs a complete reword
+1. NPC Handling needs a complete rework (and finish shop system)
 2. Story and Dialog need fleshing out
 3. Need to finish the graphics
 4. Need to add a proper ending
