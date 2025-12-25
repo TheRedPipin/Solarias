@@ -1,16 +1,19 @@
 import { gameState, hasItem, addItem, removeItem, triggerPlayerInfoUpdate } from './gameState.js';
 
 export const npcs = {
-    whimpering: {
+    "whimpering": {
         name: "Whimpering Man",
         description: "A hunched figure rocks back and forth, sobbing quietly. He won't look at you.",
         dialogue: {
             default: "...*sob*... *sob*...",
             give_jar: "The man snatches the jar from your hands. Tears stream down his face, filling it slowly. He hand's it back."
+        },
+        handleSpeech(speech) {
+            return this.dialogue.default;
         }
     },
     
-    merchant: {
+    "merchant": {
         name: "The Merchant",
         description: "The merchant's smile never reaches his eyes. 'Everything has a price,' he whispers.",
         dialogue: {
@@ -23,48 +26,10 @@ export const npcs = {
             no_feet: "You don't have enough feet for that.",
             already_own: "You already have that.",
             default: "*The man hums as he saws away at something*"
-        },
-        getGreeting: () => {
-            if (!gameState.flags.merchant_greeted) {
-                gameState.flags.merchant_greeted = true;
-                return npcs.merchant.dialogue.greeting;
-            }
-            return npcs.merchant.dialogue.default;
-        },
-        canTrade: () => hasItem('bone_saw'),
-        buyGlowBug: () => {
-            if (!hasItem('bone_saw')) {
-                return npcs.merchant.dialogue.no_saw;
-            }
-            if (hasItem('glow_bug')) {
-                return npcs.merchant.dialogue.already_own;
-            }
-            if (gameState.bodyParts.hands > 0) {
-                gameState.bodyParts.hands--;
-                addItem('glow_bug');
-                triggerPlayerInfoUpdate();
-                return npcs.merchant.dialogue.buy_glowbug_success;
-            }
-            return npcs.merchant.dialogue.no_hands;
-        },
-        buySkeletonKey: () => {
-            if (!hasItem('bone_saw')) {
-                return npcs.merchant.dialogue.no_saw;
-            }
-            if (hasItem('skeleton_key')) {
-                return npcs.merchant.dialogue.already_own;
-            }
-            if (gameState.bodyParts.feet > 0) {
-                gameState.bodyParts.feet--;
-                addItem('skeleton_key');
-                triggerPlayerInfoUpdate();
-                return npcs.merchant.dialogue.buy_key_success;
-            }
-            return npcs.merchant.dialogue.no_feet;
         }
     },
     
-    prisoner: {
+    "prisoner": {
         name: "The Prisoner",
         description: "A broken figure sits motionless. Their eyes are hollow, but they still breathe.",
         dialogue: {
@@ -72,19 +37,6 @@ export const npcs = {
             with_glowbug: "Is that... light? Real light? Please. Please, I'll give you anything. Here, take this. I've kept it safe, but I don't need it anymore.\n\n[The prisoner gives you a jar]",
             after_trade: "Thank you. Thank you. At least now I can see the walls that cage me.",
             no_glowbug: "The prisoner stares through you. They have nothing left to give."
-        },
-        canTrade: () => hasItem('glow_bug') && !gameState.flags.prisoner_helped,
-        trade: () => {
-            if (hasItem('glow_bug') && !gameState.flags.prisoner_helped) {
-                removeItem('glow_bug');
-                addItem('jar');
-                gameState.flags.prisoner_helped = true;
-                return npcs.prisoner.dialogue.with_glowbug;
-            }
-            if (gameState.flags.prisoner_helped) {
-                return npcs.prisoner.dialogue.after_trade;
-            }
-            return npcs.prisoner.dialogue.no_glowbug;
         }
     }
 };

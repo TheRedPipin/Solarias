@@ -31,8 +31,8 @@ export function parseCommand(input) {
         return handleUse(cmd, currentTile);
     }
     
-    if (cmd.startsWith('talk ') || cmd.startsWith('speak ')) {
-        return handleSpeech(input, type, currentTile);
+    if (cmd.startsWith('say ') || cmd.startsWith('speak ')) {
+        return handleSpeech(input, currentTile);
     }
     
     if (cmd.startsWith('give ')) {
@@ -59,6 +59,7 @@ function getHelpText() {
     USE [item] - Use an item
     GIVE [item] TO [person] - Give an item
     BUY [item] - Purchase from merchant
+    SAY [something] - Speak to someone
     
     OTHER:
     INVENTORY / I - Check items
@@ -171,43 +172,16 @@ function handleTake(cmd, currentTile) {
     return "There's nothing to take here.";
 }
 
-function handleSpeech(input, type, currentTile) {
+function handleSpeech(input, currentTile) {
     let speech = input;
-    if (type === 'Do') {
-        speech = input.replace(/^(talk|speak)\s+(to\s+)?/i, '');
-    }
-
+    speech = input.replace(/^(talk|speak)\s+(to\s+)?/i, '');
     if (!currentTile || !currentTile.npc) {
-        return `You say: "${speech}"\n\nYour words echo unanswered.`;
+        return `Your words echo unanswered.`;
     }
-    
     const npc = npcs[currentTile.npc];
-    if (!npc || !npc.dialogue) {
-        return `You say: "${speech}"\n\nThey don't respond.`;
+    if (npc.handleSpeech) {
+        return npc.handleSpeech(speech);
     }
-    
-    if (currentTile.npc === 'merchant') {
-        const lowerSpeech = speech.toLowerCase();
-        if (lowerSpeech.includes('glow') && lowerSpeech.includes('bug')) {
-            return npc.buyGlowBug();
-        }
-        if (lowerSpeech.includes('skeleton') && lowerSpeech.includes('key')) {
-            return npc.buySkeletonKey();
-        }
-        if (lowerSpeech.includes('what') || lowerSpeech.includes('sell') || lowerSpeech.includes('buy')) {
-            return npc.dialogue.menu
-        }
-        return npc.getGreeting();
-    }
-    
-    if (currentTile.npc === 'whimpering') {
-        return npc.dialogue.default;
-    }
-    
-    if (currentTile.npc === 'prisoner') {
-        return npc.dialogue.default;
-    }
-    
     return npc.dialogue.default;
 }
 
