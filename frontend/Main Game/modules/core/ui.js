@@ -1,8 +1,5 @@
-import { CommandType } from './state.js';
-
 export function initElements() {
     const elements = {
-        typeBtn: document.getElementById('typeSelect'),
         promptBox: document.getElementById('promptBox'),
         descPanel: document.querySelector('#descriptionPanel .panel-content'),
         viewPanel: document.querySelector('#viewPanel .view-content'),
@@ -16,13 +13,6 @@ export function initElements() {
         return null;
     }
     return elements;
-}
-
-export function toggleCommandType(elements) {
-    const currentType = elements.typeBtn.textContent;
-    elements.typeBtn.textContent =
-        currentType === CommandType.DO ? CommandType.SAY : CommandType.DO;
-    elements.promptBox.focus();
 }
 
 export function addMessage(elements, message, className = '', instant = false) {
@@ -45,7 +35,6 @@ export function addMessage(elements, message, className = '', instant = false) {
             charIndex++;
             elements.descPanel.parentElement.scrollTop =
                 elements.descPanel.parentElement.scrollHeight;
-            
             setTimeout(typeChar, typeSpeed);
         }
     };

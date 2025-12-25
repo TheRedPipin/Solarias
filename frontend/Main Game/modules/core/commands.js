@@ -3,20 +3,19 @@ import { addMessage } from './ui.js';
 import { parseCommand } from '../game/parser.js';
 
 export function createCommandController(elements) {
-    function processCommand(command, type) {
-        if (!command.trim()) return;
+    function processCommand(command) {
+        if (!command.trim() || document.getElementsByClassName("goal-text").length !== 0) return;
         elements.descPanel.innerHTML = "";
-        addMessage(elements, `> ${type}: ${command}`, 'command-echo');
-        const response = parseCommand(command, type);
+        addMessage(elements, `> DO: ${command}`, 'command-echo');
+        const response = parseCommand(command);
         addMessage(elements, response, 'system-message');
     }
 
     function handleSubmit() {
         const command = elements.promptBox.value.trim();
-        const type = elements.typeBtn.textContent || CommandType.DO;
 
         if (command) {
-            processCommand(command, type);
+            processCommand(command);
             elements.promptBox.value = '';
         }
 

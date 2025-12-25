@@ -3,10 +3,9 @@ import { getTile, getNextTile, getExits } from './map.js';
 import { npcs } from './npcs.js';
 import { loadViewImage } from '../core/ui.js';
 
-export function parseCommand(input, type) {
+export function parseCommand(input) {
     const cmd = input.toLowerCase().trim();
     const currentTile = getTile(gameState.x, gameState.y);
-    console.log(currentTile)
     
     if (cmd === 'help' || cmd === '?') {
         return getHelpText();
@@ -32,7 +31,7 @@ export function parseCommand(input, type) {
         return handleUse(cmd, currentTile);
     }
     
-    if (type === 'Say' || cmd.startsWith('talk ') || cmd.startsWith('speak ')) {
+    if (cmd.startsWith('talk ') || cmd.startsWith('speak ')) {
         return handleSpeech(input, type, currentTile);
     }
     

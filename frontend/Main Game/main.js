@@ -1,5 +1,5 @@
-import { CommandType, loadSettings, saveSettings, SETTINGS_KEY } from './modules/core/state.js';
-import { initElements, toggleCommandType, addMessage, displayGoalText, applySettings, loadViewImage } from './modules/core/ui.js';
+import { loadSettings, saveSettings } from './modules/core/state.js';
+import { initElements, addMessage, displayGoalText, applySettings, loadViewImage } from './modules/core/ui.js';
 import { createCommandController } from './modules/core/commands.js';
 import { setupSettingsControls } from './modules/core/settings.js';
 import { setMapUpdater, setPlayerInfoUpdater, gameState } from './modules/game/gameState.js';
@@ -26,12 +26,8 @@ function init() {
     applySettings(settings, controls);
 
     displayGoalText('Find the sun...');
-    
-    elements.typeBtn.textContent = CommandType.DO;
 
     const { handleKeydown } = createCommandController(elements);
-
-    elements.typeBtn.addEventListener('click', () => toggleCommandType(elements));
     
     elements.promptBox.addEventListener('keydown', handleKeydown);
 
