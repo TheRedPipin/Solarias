@@ -1,4 +1,3 @@
-import { CommandType } from './state.js';
 import { addMessage } from './ui.js';
 import { parseCommand } from '../game/parser.js';
 
@@ -6,7 +5,7 @@ export function createCommandController(elements) {
     function processCommand(command) {
         if (!command.trim() || document.getElementsByClassName("goal-text").length !== 0) return;
         elements.descPanel.innerHTML = "";
-        addMessage(elements, `> DO: ${command}`, 'command-echo');
+        addMessage(elements, `> YOU: ${command}`, 'command-echo');
         const response = parseCommand(command);
         addMessage(elements, response, 'system-message');
     }
@@ -29,16 +28,16 @@ export function createCommandController(elements) {
                 handleSubmit();
                 break;
             case 'ArrowUp':
-                processCommand("North", CommandType.DO)
+                processCommand("Go North")
                 break;
             case 'ArrowDown':
-                processCommand("South", CommandType.DO)
+                processCommand("Go South")
                 break;
             case 'ArrowRight':
-                processCommand("East", CommandType.DO)
+                processCommand("Go East")
                 break;
             case 'ArrowLeft':
-                processCommand("West", CommandType.DO)
+                processCommand("Go West")
                 break;
         }
     }

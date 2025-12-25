@@ -1,8 +1,3 @@
-export const CommandType = {
-    DO: 'Do',
-    SAY: 'Say'
-};
-
 export const SETTINGS_KEY = 'solarias-settings';
 
 export const DEFAULT_SETTINGS = {
