@@ -5,7 +5,7 @@ export function createCommandController(elements) {
     function processCommand(command) {
         if (!command.trim() || document.getElementsByClassName("goal-text").length !== 0) return;
         elements.descPanel.innerHTML = "";
-        addMessage(elements, `> YOU: ${command}`, 'command-echo');
+        addMessage(elements, `> YOU: ${command.toUpperCase()}`, 'command-echo');
         const response = parseCommand(command);
         addMessage(elements, response, 'system-message');
     }

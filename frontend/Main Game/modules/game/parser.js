@@ -46,24 +46,30 @@ export function parseCommand(input) {
 }
 
 function getHelpText() {
-    return `
-    Available Commands:
+    return `Available Commands:
+MOVEMENT:
 
-    MOVEMENT:
-    GO [direction] / [N/S/E/W] - Move in a direction
-    
-    INTERACTION:
-    LOOK / EXAMINE - Look around
-    TAKE [item] - Pick up an item
-    USE [item] - Use an item
-    GIVE [item] TO [person] - Give an item
-    BUY [item] - Purchase from merchant
-    SAY [something] - Speak to someone
-    
-    OTHER:
-    INVENTORY / I - Check items
-    HELP - Show this help text
-    SWITCH BETWEEN DO AND SAY MODES USING THE TOGGLE BUTTON
+GO [direction] / [N/S/E/W] - Move in a direction
+
+INTERACTION:
+
+LOOK / EXAMINE - Look around
+
+TAKE [item] - Pick up an item
+
+USE [item] - Use an item
+
+GIVE [item] TO [person] - Give an item
+
+BUY [item] - Purchase from merchant
+
+SAY [something] - Speak to someone
+
+OTHER:
+
+INVENTORY / I - Check items
+
+HELP - Show this help text
   `;
 }
 
