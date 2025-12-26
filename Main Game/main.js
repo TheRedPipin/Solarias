@@ -1,7 +1,6 @@
-import { loadSettings, saveSettings } from './modules/core/state.js';
 import { initElements, addMessage, displayGoalText, applySettings, loadViewImage } from './modules/core/ui.js';
 import { createCommandController } from './modules/core/commands.js';
-import { setupSettingsControls } from './modules/core/settings.js';
+import { setupSettingsControls, loadSettings, saveSettings } from './modules/core/settings.js';
 import { setMapUpdater, setPlayerInfoUpdater, setViewImageUpdater, gameState, loadTileImage } from './modules/game/gameState.js';
 import { updateMapDisplay, getTile } from './modules/game/map.js';
 import { updatePlayerInfo } from './modules/core/playerInfo.js';
