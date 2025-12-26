@@ -38,9 +38,7 @@ export function hasItem(item) {
     return gameState.inventory.includes(item);
 }
 
-export function triggerPlayerInfoUpdate() {
-    updatePlayerInfo();
-}
+
 
 export function moveToTile(x, y) {
     gameState.x = x;
@@ -56,12 +54,16 @@ export function moveToTile(x, y) {
 
 let updateMapDisplay = () => {};
 
-export function setMapUpdater(fn) {
-    updateMapDisplay = fn;
-}
-
-export function setPlayerInfoUpdater(fn) {
-    updatePlayerInfo = fn;
+export function setUpdaters({ mapUpdater, playerInfoUpdater, viewImageUpdater } = {}) {
+    if (typeof mapUpdater === 'function') {
+        updateMapDisplay = mapUpdater;
+    }
+    if (typeof playerInfoUpdater === 'function') {
+        updatePlayerInfo = playerInfoUpdater;
+    }
+    if (typeof viewImageUpdater === 'function') {
+        updateViewImage = viewImageUpdater;
+    }
 }
 
 export function getCurrentPosition() {
@@ -83,10 +85,6 @@ export function resetGameState() {
 }
 
 let updateViewImage = () => {};
-
-export function setViewImageUpdater(fn) {
-    updateViewImage = fn;
-}
 
 export function loadTileImage(tile, forceTransition = false) {
     if (!tile || !tile.image) {

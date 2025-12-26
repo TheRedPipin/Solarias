@@ -1,7 +1,7 @@
 import { initElements, addMessage, displayGoalText, applySettings, loadViewImage } from './modules/core/ui.js';
 import { createCommandController } from './modules/core/commands.js';
 import { setupSettingsControls, loadSettings, saveSettings } from './modules/core/settings.js';
-import { setMapUpdater, setPlayerInfoUpdater, setViewImageUpdater, gameState, loadTileImage } from './modules/game/gameState.js';
+import { setUpdaters, gameState, loadTileImage } from './modules/game/gameState.js';
 import { updateMapDisplay, getTile } from './modules/game/map.js';
 import { updatePlayerInfo } from './modules/core/playerInfo.js';
 
@@ -45,9 +45,11 @@ function init() {
         }
     });
 
-    setMapUpdater(updateMapDisplay);
-    setPlayerInfoUpdater(updatePlayerInfo);
-    setViewImageUpdater(loadViewImage);
+    setUpdaters({
+        mapUpdater: updateMapDisplay,
+        playerInfoUpdater: updatePlayerInfo,
+        viewImageUpdater: loadViewImage
+    });
     
     setTimeout(() => {
         gameState.flags.visited_tiles = ['6,6'];

@@ -1,5 +1,5 @@
 import { getTile, getNextTile, getExits } from './map.js';
-import { gameState, hasItem, addItem, removeItem, moveToTile, triggerPlayerInfoUpdate, loadTileImage } from './gameState.js';
+import { gameState, hasItem, addItem, removeItem, moveToTile, loadTileImage } from './gameState.js';
 import { npcs } from './npcs.js';
 
 export function parseCommand(input) {
