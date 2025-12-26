@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SOLARIAS - Terminal-style dungeon exploration game">
+    <title>SOLARIA - Find The Sun</title>
+    <link rel="stylesheet" href="main.css">
+    <script type="module" src="main.js"></script>
+</head>
+<body>
+    <audio id="ambienceAudio" loop>
+        <source src="../assets/ambience.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="breathingAudio" loop>
+        <source src="../assets/breathing.mp3" type="audio/mpeg">
+    </audio>
+    <main id="mainContainer" role="main">
+        <div id="displayContainer">
+            <!-- Left panel: Game narrative and descriptions -->
+            <aside id="descriptionPanel" role="complementary" aria-label="Game description">
+                <div class="panel-content"></div>
+            </aside>
+            
+            <!-- Center panel: Visual display area -->
+            <section id="viewPanel" role="region" aria-label="Game view">
+                <div class="view-content">
+                    <img alt="ASCII Corridor View" class="view-image">
+                </div>
+            </section>
+            
+            <!-- Right panel: Player info and map -->
+            <aside id="extraContainer" role="complementary" aria-label="Player information">
+                <div id="playerPanel" class="info-panel">
+                    <h2 class="panel-title" style="text-align: center;">Inventory</h2>
+                    <div id="playerName" class="player-info"></div>
+                </div>
+                <div id="mapPanel" class="info-panel">
+                    <h2 class="panel-title"></h2>
+                    <div class="map-content"></div>
+                </div>
+            </aside>
+            
+            <!-- Command input area -->
+            <div id="promptBoxContainer" role="search" aria-label="Command input">
+                <button id="settingsBtn" type="button" aria-label="Open settings" title="Settings">⚙</button>
+                <input id="promptBox" type="text" placeholder="Enter command..." aria-label="Command input" autocomplete="off">
+            </div>
+        </div>
+    </main>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal" hidden>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button id="closeSettingsBtn" type="button" aria-label="Close settings">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <label for="volumeSlider">Volume</label>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="50" class="slider">
+                    <span id="volumeValue">50%</span>
+                </div>
+                <div class="setting-item">
+                    <label for="ambienceToggle">Background Ambience</label>
+                    <input type="checkbox" id="ambienceToggle" checked>
+                </div>
+                <div class="setting-item">
+                    <button id="resetBtn" type="button" class="setting-button">Reset Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
